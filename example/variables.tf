@@ -75,3 +75,12 @@ variable "kubeseal_namespace" {
 
 variable "cp_entitlement_key" {
 }
+
+variable "resource_group_name" {
+}
+
+variable "name_prefix" {
+}
+
+variable "region" {
+}
