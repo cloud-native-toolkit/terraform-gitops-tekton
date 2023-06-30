@@ -40,6 +40,9 @@ locals {
   type  = "operators"
   application_branch = "main"
   layer_config = var.gitops_config[local.layer]
+
+  git_credentials = yamlencode(var.git_credentials)
+  gitops_config = yamlencode(var.gitops_config)
 }
 
 resource "random_string" "random" {
@@ -53,15 +56,15 @@ resource "random_string" "random" {
 data gitops_metadata_cluster cluster {
   server_name = var.server_name
   branch = local.application_branch
-  credentials = var.git_credentials
-  config = var.gitops_config
+  credentials = local.git_credentials
+  config = local.gitops_config
 }
 
 data gitops_metadata_packages packages {
   server_name = var.server_name
   branch = local.application_branch
-  credentials = var.git_credentials
-  config = var.gitops_config
+  credentials = local.git_credentials
+  config = local.gitops_config
   package_name_filter = ["openshift-pipelines-operator-rh", "tektoncd-operator"]
 }
 
@@ -85,6 +88,6 @@ resource gitops_module module {
   layer = local.layer
   type = local.type
   branch = local.application_branch
-  config = yamlencode(var.gitops_config)
-  credentials = yamlencode(var.git_credentials)
+  config = local.gitops_config
+  credentials = local.git_credentials
 }
