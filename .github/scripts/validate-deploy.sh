@@ -51,5 +51,13 @@ check_k8s_namespace "${NAMESPACE}"
 
 check_k8s_resource "${NAMESPACE}" "subscription" "${COMPONENT_NAME}"
 
+CURRENT_CSV=$(kubectl get subscription "${COMPONENT_NAME}" -n "${NAMESPACE}" -o yaml | jq -r '.status.currentCSV // empty')
+if [[ -z "${CURRENT_CSV}" ]]; then
+  echo "currentCSV could not be found" >&2
+  exit 1
+fi
+
+check_k8s_resource "${NAMESPACE}" "csv" "${CURRENT_CSV}"
+
 cd ..
 rm -rf .testrepo
