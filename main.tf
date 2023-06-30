@@ -2,7 +2,7 @@ locals {
   name                 = "tekton"
   yaml_dir             = "${path.cwd}/.tmp/${local.name}/chart/${local.name}"
 
-  package              = data.gitops_metadata_packages.packages[0]
+  package              = data.gitops_metadata_packages.packages.packages[0]
   package_name         = local.package.package_name
   catalog_source_namespace = local.package.catalog_source_namespace
   catalog_source       = local.package.catalog_source
