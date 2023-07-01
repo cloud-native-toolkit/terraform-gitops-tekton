@@ -6,4 +6,5 @@ module "gitops_module" {
   server_name = module.gitops.server_name
   namespace = module.dev_tools_namespace.name
   kubeseal_cert = module.gitops.sealed_secrets_cert
+  sync = module.gitops-bootstrap.sync
 }

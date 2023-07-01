@@ -79,3 +79,9 @@ variable "server_name" {
   description = "The name of the server"
   default     = "default"
 }
+
+variable "sync" {
+  type        = string
+  description = "Value used to coordinate sequencing with upstream modules"
+  default     = "default"
+}

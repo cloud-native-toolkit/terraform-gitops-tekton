@@ -21,6 +21,10 @@ versions:
         refs:
           - source: github.com/cloud-native-toolkit/terraform-gitops-namespace.git
             version: ">= 1.0.0"
+      - id: bootstrap
+        interface: github.com/cloud-native-toolkit/automation-modules#argocd-bootstrap
+        optional: true
+        refs: []
     variables:
       - name: gitops_config
         moduleRef:
@@ -42,3 +46,7 @@ versions:
         moduleRef:
           id: gitops
           output: sealed_secrets_cert
+      - name: sync
+        moduleRef:
+          id: bootstrap
+          output: sync

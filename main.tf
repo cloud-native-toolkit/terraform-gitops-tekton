@@ -53,7 +53,15 @@ resource "random_string" "random" {
   special          = false
 }
 
+resource null_resource sync {
+  provisioner "local-exec" {
+    command = "echo 'Sync: ${var.sync}'"
+  }
+}
+
 data gitops_metadata_cluster cluster {
+  depends_on = [null_resource.sync]
+
   server_name = var.server_name
   branch = local.application_branch
   credentials = local.git_credentials
@@ -61,6 +69,8 @@ data gitops_metadata_cluster cluster {
 }
 
 data gitops_metadata_packages packages {
+  depends_on = [null_resource.sync]
+
   server_name = var.server_name
   branch = local.application_branch
   credentials = local.git_credentials
