@@ -1,5 +1,5 @@
-module "gitops-bootstrap" {
-  source = "github.com/cloud-native-toolkit/terraform-tools-argocd-bootstrap"
+module "gitops_starter" {
+  source = "github.com/cloud-native-toolkit/terraform-k8s-gitops-starter"
 
   cluster_type        = module.cluster.platform.type_code
   ingress_subdomain   = module.cluster.platform.ingress
