@@ -92,7 +92,7 @@ resource gitops_module module {
   depends_on = [null_resource.create_yaml]
 
   name = local.name
-  namespace = var.namespace
+  namespace = local.operator_namespace
   content_dir = local.yaml_dir
   server_name = var.server_name
   layer = local.layer
