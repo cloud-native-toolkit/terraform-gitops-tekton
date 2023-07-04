@@ -10,5 +10,6 @@ resource local_file write_outputs {
     layer       = module.gitops_module.layer
     layer_dir   = module.gitops_module.layer == "infrastructure" ? "1-infrastructure" : (module.gitops_module.layer == "services" ? "2-services" : "3-applications")
     type        = module.gitops_module.type
+    package_name = module.gitops_module.package_name
   })
 }

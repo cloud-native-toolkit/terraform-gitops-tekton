@@ -24,6 +24,7 @@ fi
 export KUBECONFIG=$(cat .kubeconfig)
 NAMESPACE=$(cat .namespace)
 COMPONENT_NAME=$(jq -r '.name // "my-module"' gitops-output.json)
+PACKAGE_NAME=$(jq -r '.package_name // "my-module"' gitops-output.json)
 BRANCH=$(jq -r '.branch // "main"' gitops-output.json)
 SERVER_NAME=$(jq -r '.server_name // "default"' gitops-output.json)
 LAYER=$(jq -r '.layer_dir // "2-services"' gitops-output.json)
@@ -44,9 +45,9 @@ validate_gitops_content "${NAMESPACE}" "${LAYER}" "${SERVER_NAME}" "${TYPE}" "${
 
 check_k8s_namespace "${NAMESPACE}"
 
-check_k8s_resource "${NAMESPACE}" "subscription" "${COMPONENT_NAME}"
+check_k8s_resource "${NAMESPACE}" "subscription" "${PACKAGE_NAME}"
 
-CURRENT_CSV=$(kubectl get subscription "${COMPONENT_NAME}" -n "${NAMESPACE}" -o yaml | jq -r '.status.currentCSV // empty')
+CURRENT_CSV=$(kubectl get subscription "${PACKAGE_NAME}" -n "${NAMESPACE}" -o yaml | jq -r '.status.currentCSV // empty')
 if [[ -z "${CURRENT_CSV}" ]]; then
   echo "currentCSV could not be found" >&2
   exit 1
