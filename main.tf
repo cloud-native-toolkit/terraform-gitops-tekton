@@ -34,6 +34,17 @@ locals {
       }
       tektonNamespace = local.dashboard_namespace
     }
+    resource-owner-job = {
+      owner = {
+        group = "operators.coreos.com"
+        kind = "Subscription"
+        name = local.package_name
+      }
+      target = {
+        group = "operators.coreos.com"
+        kind = "ClusterServiceVersion"
+      }
+    }
   }
 
   layer = "services"

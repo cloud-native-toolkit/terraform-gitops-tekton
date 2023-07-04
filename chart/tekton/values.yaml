@@ -3,3 +3,12 @@
 # Declare variables to be passed into your templates.
 
 tekton-operator: {}
+
+resource-owner-job:
+  owner:
+    group: operators.coreos.com
+    kind: Subscription
+    name: ""
+  target:
+    group: operators.coreos.com
+    kind: ClusterServiceVersion

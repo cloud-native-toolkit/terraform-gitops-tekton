@@ -1,0 +1,16 @@
+"tekton-operator":
+  "app": "tekton"
+  "clusterType": "ocp4"
+  "createdBy": "tekton-o7i5cknbg5d8xrpp"
+  "ocpCatalog":
+    "channel": "latest"
+    "name": "openshift-pipelines-operator-rh"
+    "source": "redhat-operators"
+  "olmNamespace": "openshift-marketplace"
+  "operatorHub":
+    "channel": "latest"
+    "name": "openshift-pipelines-operator-rh"
+    "source": "redhat-operators"
+  "operatorNamespace": "openshift-operators"
+  "tektonNamespace": "openshift-pipelines"
+

@@ -27,3 +27,6 @@ dependencies:
   - name: tekton-operator
     version: 0.3.3
     repository: https://charts.cloudnativetoolkit.dev/
+  - name: resource-owner-job
+    version: 0.1.0
+    repository: https://charts.cloudnativetoolkit.dev/
