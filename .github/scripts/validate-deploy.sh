@@ -47,7 +47,7 @@ check_k8s_namespace "${NAMESPACE}"
 
 check_k8s_resource "${NAMESPACE}" "subscription" "${PACKAGE_NAME}"
 
-CURRENT_CSV=$(kubectl get subscription "${PACKAGE_NAME}" -n "${NAMESPACE}" -o yaml | jq -r '.status.currentCSV // empty')
+CURRENT_CSV=$(kubectl get subscription "${PACKAGE_NAME}" -n "${NAMESPACE}" -o json | jq -r '.status.currentCSV // empty')
 if [[ -z "${CURRENT_CSV}" ]]; then
   echo "currentCSV could not be found" >&2
   exit 1

@@ -4,6 +4,6 @@ dependencies:
   version: 0.3.3
 - name: resource-owner-job
   repository: https://charts.cloudnativetoolkit.dev/
-  version: 0.1.0
-digest: sha256:1425f15d1c99bba535bf48ce00ed393161d1f1b9c051c4de5923a32f6f8c05cb
-generated: "2023-07-04T16:14:03.98434-05:00"
+  version: 0.2.0
+digest: sha256:7e30ea9abc0a19491590a2161268a48d7017cb62989237ccc1e44e4c0a9d05a8
+generated: "2023-07-04T16:49:10.862259-05:00"
