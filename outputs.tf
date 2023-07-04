@@ -1,6 +1,12 @@
 
 output "name" {
   description = "The name of the module"
+  value       = local.name
+  depends_on  = [gitops_module.module]
+}
+
+output "package_name" {
+  description = "The name of the module"
   value       = local.package_name
   depends_on  = [gitops_module.module]
 }
