@@ -12,7 +12,7 @@ locals {
   openshift_cluster   = length(regexall("^openshift", local.package_name)) > 0
   cluster_type        = data.gitops_metadata_cluster.cluster.cluster_type
   console_host        = data.gitops_metadata_cluster.cluster.default_ingress_subdomain
-  operator_namespace  = local.openshift_cluster ? "openshift-operators" : "operators"
+  operator_namespace  = data.gitops_metadata_cluster.cluster.operator_namespace
   dashboard_namespace = local.openshift_cluster ? "openshift-pipelines" : "tekton-pipelines"
 
   values_content = {
