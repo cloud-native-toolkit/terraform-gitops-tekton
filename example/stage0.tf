@@ -5,6 +5,7 @@ terraform {
     }
     clis = {
       source = "cloud-native-toolkit/clis"
+      version = ">= 0.4.1"
     }
   }
 }
