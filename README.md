@@ -73,7 +73,7 @@ on:
     branches: [ main ]
 ```
 
-The `verify` job checks out the module and deploys the terraform template in the `test/stages` folder. (More on the details of this folder in a later section.) It applies the testcase(s) listed in the `strategy.matrix.testcase` variable against the terraform template to validate the module logic. It then runs the `.github/scripts/validate-deploy.sh` to verify that everything was deployed successfully. **Note:** This script should be customized to validate the resources provisioned by the module. After the deploy is completed, the destroy logic is also applied to validate the destroy logic and to clean up after the test. The parameters for the test case are defined in https://github.com/cloud-native-toolkit/action-module-verify/tree/main/env. New test cases can be added via pull request.
+The `verify` job checks out the module and deploys the terraform template in the `example` folder. (More on the details of this folder in a later section.) It applies the testcase(s) listed in the `strategy.matrix.testcase` variable against the terraform template to validate the module logic. It then runs the `.github/scripts/validate-deploy.sh` to verify that everything was deployed successfully. **Note:** This script should be customized to validate the resources provisioned by the module. After the deploy is completed, the destroy logic is also applied to validate the destroy logic and to clean up after the test. The parameters for the test case are defined in https://github.com/cloud-native-toolkit/action-module-verify/tree/main/env. New test cases can be added via pull request.
 
 The `verifyMetadata` job checks out the module and validates the module metadata against the module metadata schema to ensure the structure is valid.
 
@@ -167,7 +167,7 @@ versions:
 
 ### Module test logic
 
-The `test/stages` folder contains the terraform template needed to execute the module. By convention, each module is defined in its own file. Also by convention, all prereqs or dependencies for the module are named `stage1-xxx` and the module to be tested is named `stage2-xxx`. The default test templates in the GitOps repo are set up to provision a GitOps repository, log into a cluster, provision ArgoCD in the cluster and bootstrap it with the GitOps repository, provision a namespace via GitOps where the module will be deployed then apply the module logic. The end result of this test terraform template should be a cluster that has been provisioned with the components of the module via the GitOps repository.
+The `example` folder contains the terraform template needed to execute the module. By convention, each module is defined in its own file. Also by convention, all prereqs or dependencies for the module are named `stage1-xxx` and the module to be tested is named `stage2-xxx`. The default test templates in the GitOps repo are set up to provision a GitOps repository, log into a cluster, provision ArgoCD in the cluster and bootstrap it with the GitOps repository, provision a namespace via GitOps where the module will be deployed then apply the module logic. The end result of this test terraform template should be a cluster that has been provisioned with the components of the module via the GitOps repository.
 
 This test logic will run every time a change is made to the repository to ensure there are no regressions to the module.
 
@@ -207,7 +207,7 @@ The yaml used to define the resources required to deploy the component can be de
 ### Adding logic and updating the test
 
 1. Start by implementing the logic in `main.tf`, adding required variables to `variables.tf` as necessary.
-2. Update the `test/stages/stage2-xxx.tf` file with any of the required variables.
-3. If the module has dependencies on other modules, add them as `test/stages/stage1-xxx.tf` and reference the output variables as variable inputs.
+2. Update the `example/stage2-xxx.tf` file with any of the required variables.
+3. If the module has dependencies on other modules, add them as `example/stage1-xxx.tf` and reference the output variables as variable inputs.
 4. Review the validation logic in `.github/scripts/validate-deploy.sh` and update as appropriate.
 5. Push the changes to the remote branch and review the check(s) on the pull request. If the checks fail, review the log and make the necessary adjustments.
