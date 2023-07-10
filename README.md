@@ -211,4 +211,3 @@ The yaml used to define the resources required to deploy the component can be de
 3. If the module has dependencies on other modules, add them as `example/stage1-xxx.tf` and reference the output variables as variable inputs.
 4. Review the validation logic in `.github/scripts/validate-deploy.sh` and update as appropriate.
 5. Push the changes to the remote branch and review the check(s) on the pull request. If the checks fail, review the log and make the necessary adjustments.
-
