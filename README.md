@@ -23,7 +23,6 @@ The module depends on the following software components:
 This module makes use of the output from other modules:
 
 - GitOps - github.com/cloud-native-toolkit/terraform-tools-gitops.git
-- Namespace - github.com/cloud-native-toolkit/terraform-gitops-namespace.git
 - Bootstrap - (Optional, interface) github.com/cloud-native-toolkit/automation-modules#argocd-bootstrap
 
 ## Example usage
