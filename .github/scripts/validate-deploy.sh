@@ -21,14 +21,10 @@ if ! command -v kubectl 1> /dev/null 2> /dev/null; then
   exit 1
 fi
 
-if ! command -v ibmcloud 1> /dev/null 2> /dev/null; then
-  echo "ibmcloud cli not found" >&2
-  exit 1
-fi
-
 export KUBECONFIG=$(cat .kubeconfig)
 NAMESPACE=$(cat .namespace)
 COMPONENT_NAME=$(jq -r '.name // "my-module"' gitops-output.json)
+PACKAGE_NAME=$(jq -r '.package_name // "my-module"' gitops-output.json)
 BRANCH=$(jq -r '.branch // "main"' gitops-output.json)
 SERVER_NAME=$(jq -r '.server_name // "default"' gitops-output.json)
 LAYER=$(jq -r '.layer_dir // "2-services"' gitops-output.json)
@@ -44,11 +40,20 @@ find . -name "*"
 
 set -e
 
+validate_gitops_content "${NAMESPACE}" "${LAYER}" "${SERVER_NAME}" "${TYPE}" "${COMPONENT_NAME}" "Chart.yaml"
 validate_gitops_content "${NAMESPACE}" "${LAYER}" "${SERVER_NAME}" "${TYPE}" "${COMPONENT_NAME}" "values.yaml"
 
 check_k8s_namespace "${NAMESPACE}"
 
-#check_k8s_resource "${NAMESPACE}" "deployment" "${COMPONENT_NAME}"
+check_k8s_resource "${NAMESPACE}" "subscription" "${PACKAGE_NAME}"
+
+CURRENT_CSV=$(kubectl get subscription "${PACKAGE_NAME}" -n "${NAMESPACE}" -o json | jq -r '.status.currentCSV // empty')
+if [[ -z "${CURRENT_CSV}" ]]; then
+  echo "currentCSV could not be found" >&2
+  exit 1
+fi
+
+check_k8s_resource "${NAMESPACE}" "csv" "${CURRENT_CSV}"
 
 cd ..
 rm -rf .testrepo

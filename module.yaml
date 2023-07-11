@@ -11,16 +11,16 @@ versions:
       - ocp4
     providers:
       - name: gitops
-        source: "cloud-native-toolkit/gitops"
+        source: cloud-native-toolkit/gitops
     dependencies:
       - id: gitops
         refs:
           - source: github.com/cloud-native-toolkit/terraform-tools-gitops.git
             version: ">= 1.1.0"
-      - id: namespace
-        refs:
-          - source: github.com/cloud-native-toolkit/terraform-gitops-namespace.git
-            version: ">= 1.0.0"
+      - id: bootstrap
+        interface: github.com/cloud-native-toolkit/automation-modules#argocd-bootstrap
+        optional: true
+        refs: []
     variables:
       - name: gitops_config
         moduleRef:
@@ -34,11 +34,11 @@ versions:
         moduleRef:
           id: gitops
           output: server_name
-      - name: namespace
-        moduleRef:
-          id: namespace
-          output: name
       - name: kubeseal_cert
         moduleRef:
           id: gitops
           output: sealed_secrets_cert
+      - name: sync
+        moduleRef:
+          id: bootstrap
+          output: sync

@@ -1,23 +1,10 @@
-# Starter kit for a Terraform GitOps module
+# Tekton gitops module
 
-This is a Starter kit to help with the creation of Terraform modules. The basic structure of a Terraform module is fairly
-simple and consists of the following basic values:
+Module to add resources to the gitops repository required to install the Tekton (OpenShift Pipelines) operator in a cluster.
 
-- README.md - provides a description of the module
-- main.tf - defines the logic for the module
-- variables.tf (optional) - defines the input variables for the module
-- outputs.tf (optional) - defines the values that are output from the module
-
-Beyond those files, any other content can be added and organized however you see fit. For example, you can add a `scripts/` directory
-that contains shell scripts executed by a `local-exec` `null_resource` in the terraform module. The contents will depend on what your
-module does and how it does it.
-
-## Instructions for creating a new module
-
-1. Update the title and description in the README to match the module you are creating
-2. Fill out the remaining sections in the README template as appropriate
-3. Implement your logic in the in the main.tf, variables.tf, and outputs.tf
-4. Use releases/tags to manage release versions of your module
+The module uses the package manifest from the cluster (via the gitops repository) to determine which operator subscription
+to install and from which channel (the module always uses the default channel defined in the package manifest). This way,
+the module supports installation on OpenShift or Kubernetes clusters across different releases and flavors.
 
 ## Software dependencies
 
@@ -25,35 +12,31 @@ The module depends on the following software components:
 
 ### Command-line tools
 
-- terraform - v12
-- kubectl
+- terraform - v0.15
 
 ### Terraform providers
 
-- IBM Cloud provider >= 1.5.3
-- Helm provider >= 1.1.1 (provided by Terraform)
+- Gitops - cloud-native-toolkit/gitops
 
 ## Module dependencies
 
 This module makes use of the output from other modules:
 
 - GitOps - github.com/cloud-native-toolkit/terraform-tools-gitops.git
-- Namespace - github.com/cloud-native-toolkit/terraform-gitops-namespace.git
-- etc
+- Bootstrap - (Optional, interface) github.com/cloud-native-toolkit/automation-modules#argocd-bootstrap
 
 ## Example usage
 
 ```hcl-terraform
-module "dev_tools_argocd" {
-  source = "github.com/cloud-native-toolkit/terraform-tools-argocd.git"
+module "tekton" {
+  source = "github.com/cloud-native-toolkit/terraform-gitops-tekton.git"
 
-  cluster_config_file = module.dev_cluster.config_file_path
-  cluster_type        = module.dev_cluster.type
-  app_namespace       = module.dev_cluster_namespaces.tools_namespace_name
-  ingress_subdomain   = module.dev_cluster.ingress_hostname
-  olm_namespace       = module.dev_software_olm.olm_namespace
-  operator_namespace  = module.dev_software_olm.target_namespace
-  name                = "argocd"
+   gitops_config = module.gitops.gitops_config
+   git_credentials = module.gitops.git_credentials
+   server_name = module.gitops.server_name
+   namespace = module.dev_tools_namespace.name
+   kubeseal_cert = module.gitops.sealed_secrets_cert
+   sync = module.gitops_starter.sync
 }
 ```
 
@@ -89,7 +72,7 @@ on:
     branches: [ main ]
 ```
 
-The `verify` job checks out the module and deploys the terraform template in the `test/stages` folder. (More on the details of this folder in a later section.) It applies the testcase(s) listed in the `strategy.matrix.testcase` variable against the terraform template to validate the module logic. It then runs the `.github/scripts/validate-deploy.sh` to verify that everything was deployed successfully. **Note:** This script should be customized to validate the resources provisioned by the module. After the deploy is completed, the destroy logic is also applied to validate the destroy logic and to clean up after the test. The parameters for the test case are defined in https://github.com/cloud-native-toolkit/action-module-verify/tree/main/env. New test cases can be added via pull request.
+The `verify` job checks out the module and deploys the terraform template in the `example` folder. (More on the details of this folder in a later section.) It applies the testcase(s) listed in the `strategy.matrix.testcase` variable against the terraform template to validate the module logic. It then runs the `.github/scripts/validate-deploy.sh` to verify that everything was deployed successfully. **Note:** This script should be customized to validate the resources provisioned by the module. After the deploy is completed, the destroy logic is also applied to validate the destroy logic and to clean up after the test. The parameters for the test case are defined in https://github.com/cloud-native-toolkit/action-module-verify/tree/main/env. New test cases can be added via pull request.
 
 The `verifyMetadata` job checks out the module and validates the module metadata against the module metadata schema to ensure the structure is valid.
 
@@ -183,7 +166,7 @@ versions:
 
 ### Module test logic
 
-The `test/stages` folder contains the terraform template needed to execute the module. By convention, each module is defined in its own file. Also by convention, all prereqs or dependencies for the module are named `stage1-xxx` and the module to be tested is named `stage2-xxx`. The default test templates in the GitOps repo are set up to provision a GitOps repository, log into a cluster, provision ArgoCD in the cluster and bootstrap it with the GitOps repository, provision a namespace via GitOps where the module will be deployed then apply the module logic. The end result of this test terraform template should be a cluster that has been provisioned with the components of the module via the GitOps repository.
+The `example` folder contains the terraform template needed to execute the module. By convention, each module is defined in its own file. Also by convention, all prereqs or dependencies for the module are named `stage1-xxx` and the module to be tested is named `stage2-xxx`. The default test templates in the GitOps repo are set up to provision a GitOps repository, log into a cluster, provision ArgoCD in the cluster and bootstrap it with the GitOps repository, provision a namespace via GitOps where the module will be deployed then apply the module logic. The end result of this test terraform template should be a cluster that has been provisioned with the components of the module via the GitOps repository.
 
 This test logic will run every time a change is made to the repository to ensure there are no regressions to the module.
 
@@ -223,7 +206,7 @@ The yaml used to define the resources required to deploy the component can be de
 ### Adding logic and updating the test
 
 1. Start by implementing the logic in `main.tf`, adding required variables to `variables.tf` as necessary.
-2. Update the `test/stages/stage2-xxx.tf` file with any of the required variables.
-3. If the module has dependencies on other modules, add them as `test/stages/stage1-xxx.tf` and reference the output variables as variable inputs.
+2. Update the `example/stage2-xxx.tf` file with any of the required variables.
+3. If the module has dependencies on other modules, add them as `example/stage1-xxx.tf` and reference the output variables as variable inputs.
 4. Review the validation logic in `.github/scripts/validate-deploy.sh` and update as appropriate.
 5. Push the changes to the remote branch and review the check(s) on the pull request. If the checks fail, review the log and make the necessary adjustments.

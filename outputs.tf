@@ -5,6 +5,12 @@ output "name" {
   depends_on  = [gitops_module.module]
 }
 
+output "package_name" {
+  description = "The name of the module"
+  value       = local.package_name
+  depends_on  = [gitops_module.module]
+}
+
 output "branch" {
   description = "The branch where the module config has been placed"
   value       = local.application_branch
@@ -13,7 +19,7 @@ output "branch" {
 
 output "namespace" {
   description = "The namespace where the module will be deployed"
-  value       = local.namespace
+  value       = local.operator_namespace
   depends_on  = [gitops_module.module]
 }
 

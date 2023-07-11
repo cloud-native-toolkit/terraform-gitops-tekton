@@ -63,11 +63,6 @@ variable "git_credentials" {
   sensitive   = true
 }
 
-variable "namespace" {
-  type        = string
-  description = "The namespace where the application should be deployed"
-}
-
 variable "kubeseal_cert" {
   type        = string
   description = "The certificate/public key used to encrypt the sealed secrets"
@@ -77,5 +72,11 @@ variable "kubeseal_cert" {
 variable "server_name" {
   type        = string
   description = "The name of the server"
+  default     = "default"
+}
+
+variable "sync" {
+  type        = string
+  description = "Value used to coordinate sequencing with upstream modules"
   default     = "default"
 }
