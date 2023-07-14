@@ -5,6 +5,7 @@ provider "gitops" {
   default_username = module.gitea.username
   default_token    = module.gitea.token
   default_ca_cert  = module.gitea.ca_cert
+  debug            = "true"
 }
 
 provider "clis" {
