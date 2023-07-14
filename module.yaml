@@ -1,9 +1,10 @@
-name: ""
+name: gitops-tekton
 type: gitops
-description: ""
+description: Module to configure gitops repo to deploy tekton
 tags:
   - tools
   - gitops
+  - tekton
 versions:
   - platforms:
       - kubernetes
