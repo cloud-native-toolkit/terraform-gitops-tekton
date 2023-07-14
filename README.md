@@ -6,6 +6,7 @@ The module uses the package manifest from the cluster (via the gitops repository
 to install and from which channel (the module always uses the default channel defined in the package manifest). This way,
 the module supports installation on OpenShift or Kubernetes clusters across different releases and flavors.
 
+
 ## Software dependencies
 
 The module depends on the following software components:
